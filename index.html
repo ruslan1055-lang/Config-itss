@@ -58,84 +58,66 @@ textarea#output{width:100%;height:200px;background:rgba(0,0,0,0.4);border:1px so
 #dropzone:hover,#dropzone.drag{border-color:rgba(0,200,255,0.7);background:rgba(0,200,255,0.05);color:var(--blue);}
 #dropzone input{display:none;}
 .file-loaded{background:rgba(0,230,120,0.08);border-color:rgba(0,230,120,0.4);color:var(--green);}
-
-/* GitHub Panel */
-.gh-panel{background:rgba(10,20,40,0.98);border:1px solid rgba(100,200,100,0.25);border-radius:16px;padding:18px;margin-bottom:16px;}
-.gh-panel-title{font-size:14px;font-weight:900;color:#7ee787;margin-bottom:14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
-.gh-panel-title svg{transition:transform .2s;}
-.gh-panel-title.collapsed svg{transform:rotate(-90deg);}
-.gh-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.gh-field{display:flex;flex-direction:column;gap:5px;}
-.gh-field.full{grid-column:1/-1;}
-.gh-field label{font-size:11px;font-weight:900;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;}
-.gh-input{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 13px;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;outline:none;width:100%;transition:border-color .2s;}
-.gh-input:focus{border-color:rgba(100,200,100,0.5);background:rgba(100,200,100,0.07);}
+.gh-panel{background:rgba(10,20,40,0.98);border:1px solid rgba(100,200,100,0.3);border-radius:16px;padding:20px;margin-bottom:16px;}
+.gh-title{font-size:16px;font-weight:900;color:#7ee787;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.gh-fields{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.gh-field label{display:block;font-size:11px;font-weight:900;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.gh-input{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;outline:none;width:100%;transition:border-color .2s;}
+.gh-input:focus{border-color:rgba(100,200,100,0.5);background:rgba(100,200,100,0.06);}
 .gh-input::placeholder{color:rgba(255,255,255,0.2);}
-.gh-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.btn-gh-load{background:rgba(100,200,100,0.15);border:1px solid rgba(100,200,100,0.35);color:#7ee787;padding:11px 20px;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;transition:all .2s;}
-.btn-gh-load:hover{background:rgba(100,200,100,0.25);}
-.btn-gh-save{background:linear-gradient(135deg,#238636,#2ea043);color:#fff;padding:11px 20px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;transition:filter .2s;display:none;}
+.gh-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-gh-load{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#238636,#2ea043);color:#fff;border:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;transition:filter .2s;margin-bottom:8px;}
+.btn-gh-load:hover{filter:brightness(1.15);}
+.btn-gh-save{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#1f6feb,#388bfd);color:#fff;border:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;transition:filter .2s;display:none;}
 .btn-gh-save:hover{filter:brightness(1.15);}
-.btn-gh-save.visible{display:inline-block;}
-.gh-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;line-height:1.6;}
+.gh-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-top:12px;line-height:1.7;}
 .gh-hint a{color:rgba(100,200,100,0.7);text-decoration:none;}
-.gh-hint a:hover{color:#7ee787;}
-.gh-body{transition:all .2s;}
-.gh-body.hidden{display:none;}
+.loaded-banner{background:rgba(0,230,120,0.08);border:1px solid rgba(0,230,120,0.3);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;font-size:14px;font-weight:800;color:#00e676;display:none;}
 </style>
 </head>
 <body>
 
 <h1>💎 Diamond Clicker — Конфигуратор</h1>
-<p class="subtitle">Редактируй цены игры и скачивай готовый файл</p>
+<p class="subtitle">Загружай файл с GitHub, меняй цены, сохраняй обратно</p>
 
 <!-- GITHUB PANEL -->
 <div class="gh-panel">
-  <div class="gh-panel-title" onclick="toggleGhPanel(this)" id="gh-title">
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    🐙 Загрузить / Сохранить через GitHub
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style="margin-left:auto"><path d="M2 4l4 4 4-4"/></svg>
-  </div>
-  <div class="gh-body" id="gh-body">
-    <div class="gh-fields">
+  <div class="gh-title">🐙 Подключение к GitHub</div>
+  <div class="gh-fields">
+    <div class="gh-row">
       <div class="gh-field">
-        <label>👤 Владелец репозитория</label>
-        <input class="gh-input" id="gh-owner" placeholder="username или org" autocomplete="off">
+        <label>👤 Владелец</label>
+        <input class="gh-input" id="gh-owner" placeholder="ruslan1055-lang" autocomplete="off">
       </div>
       <div class="gh-field">
         <label>📁 Репозиторий</label>
-        <input class="gh-input" id="gh-repo" placeholder="my-game" autocomplete="off">
+        <input class="gh-input" id="gh-repo" placeholder="Diamond-clicker-" autocomplete="off">
       </div>
+    </div>
+    <div class="gh-row">
       <div class="gh-field">
         <label>📄 Путь к файлу</label>
-        <input class="gh-input" id="gh-path" placeholder="index.html или src/index.html" autocomplete="off" value="index.html">
+        <input class="gh-input" id="gh-path" placeholder="index.html" autocomplete="off" value="index.html">
       </div>
       <div class="gh-field">
         <label>🌿 Ветка</label>
         <input class="gh-input" id="gh-branch" placeholder="main" autocomplete="off" value="main">
       </div>
-      <div class="gh-field full">
-        <label>🔑 Personal Access Token (PAT) — нужен для записи</label>
-        <input class="gh-input" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-      </div>
     </div>
-    <div class="gh-actions">
-      <button class="btn-gh-load" onclick="loadFromGithub()">⬇️ Загрузить с GitHub</button>
-      <button class="btn-gh-save visible" id="btn-gh-save" onclick="saveToGithub()">⬆️ Сохранить на GitHub</button>
+    <div class="gh-field">
+      <label>🔑 Personal Access Token (PAT)</label>
+      <input class="gh-input" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off">
     </div>
-    <div class="gh-hint">
-      🔑 <b>Где взять токен:</b> GitHub → <a href="https://github.com/settings/tokens/new" target="_blank">Settings → Developer settings → Tokens (classic)</a> → выдай права <b>repo</b>.<br>
-      🔒 Токен хранится только в браузере и никуда не отправляется, кроме api.github.com.
-    </div>
+  </div>
+  <button class="btn-gh-load" onclick="loadFromGithub()">⬇️ Загрузить файл с GitHub</button>
+  <button class="btn-gh-save" id="btn-gh-save" onclick="saveToGithub()">⬆️ Сохранить изменения на GitHub</button>
+  <div class="gh-hint">
+    🔑 Токен: GitHub → аватарка → Settings → Developer settings → Tokens (classic) → права <b>repo</b><br>
+    🔒 Токен отправляется только на api.github.com, нигде не сохраняется.
   </div>
 </div>
 
-<div id="dropzone">
-  <input type="file" id="fileInput" accept=".html" style="display:none" onchange="loadFile(this)">
-  <div id="dz-text">📂 Загрузи index.html игры сюда<br><small style="font-weight:700;font-size:12px;opacity:0.6">или кликни для выбора файла</small></div>
-  <br>
-  <button onclick="event.stopPropagation();document.getElementById('fileInput').click()" style="margin-top:8px;padding:10px 24px;border-radius:100px;background:rgba(0,200,255,0.15);border:1px solid rgba(0,200,255,0.35);color:#00c8ff;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;">📁 Выбрать файл</button>
-</div>
+<div class="loaded-banner" id="loaded-banner"></div>
 
 <div id="status" class="status-bar"></div>
 
@@ -216,18 +198,16 @@ textarea#output{width:100%;height:200px;background:rgba(0,0,0,0.4);border:1px so
 </div>
 
 <div class="actions">
-  <button class="btn btn-gen" onclick="generateFile()">⬇️ Скачать изменённый файл</button>
   <button class="btn btn-reset" onclick="resetAll()">↺ Сбросить все изменения</button>
 </div>
 
 <div class="instructions">
   <b>Как использовать:</b>
   <ol>
-    <li><b>Способ 1 — GitHub:</b> Заполни поля выше (владелец/репо/путь/токен) и нажми «Загрузить с GitHub», затем после изменений — «Сохранить на GitHub»</li>
-    <li><b>Способ 2 — файл:</b> Загрузи файл <b>index.html</b> через кнопку ниже</li>
-    <li>Измени нужные значения в полях</li>
-    <li>Нажми <b>«Скачать изменённый файл»</b></li>
-    <li>Замени оригинальный файл на сайте скачанным</li>
+    <li>Заполни поля выше: владелец, репозиторий, токен</li>
+    <li>Нажми <b>«Загрузить файл с GitHub»</b></li>
+    <li>Измени нужные значения в полях ниже</li>
+    <li>Нажми <b>«Сохранить изменения на GitHub»</b> — файл обновится автоматически</li>
   </ol>
   <br>
   <b>Зелёная рамка</b> = значение изменено от оригинала<br>
@@ -286,55 +266,112 @@ const CONFIG = [
 
 // ── STATE ───────────────────────────────────────────────────────────────────
 let originalContent = null;
-let values = {}; // id → {original, current}
+let values = {};
+let ghFileSha = null;
 
-// ── FILE LOAD ────────────────────────────────────────────────────────────────
-function loadFile(input) {
-  const file = input.files && input.files[0];
-  if (!file) { showStatus('❌ Файл не выбран', true); return; }
-  if (!file.name.endsWith('.html') && !file.name.endsWith('.htm')) {
-    showStatus('❌ Нужен файл .html', true); return;
-  }
-  showStatus('⏳ Загружаю файл...', false);
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      originalContent = e.target.result;
-      if (!originalContent || originalContent.length < 100) {
-        showStatus('❌ Файл пустой или повреждён', true); return;
-      }
-      parseValues();
-      const dz = document.getElementById('dropzone');
-      dz.classList.add('file-loaded');
-      document.getElementById('dz-text').innerHTML =
-        `✅ Загружен: <b>${file.name}</b> (${(file.size/1024).toFixed(0)} KB)<br><small style="font-size:11px;opacity:0.7">Кликни «Выбрать файл» чтобы загрузить другой</small>`;
-      showStatus('✅ Файл загружен! Значения распознаны — редактируй и скачивай.', false);
-    } catch(err) {
-      showStatus('❌ Ошибка разбора файла: ' + err.message, true);
-    }
+// ── GITHUB ───────────────────────────────────────────────────────────────────
+function ghParams() {
+  return {
+    owner:  (document.getElementById('gh-owner').value || '').trim(),
+    repo:   (document.getElementById('gh-repo').value || '').trim(),
+    path:   (document.getElementById('gh-path').value || 'index.html').trim(),
+    branch: (document.getElementById('gh-branch').value || 'main').trim(),
+    token:  (document.getElementById('gh-token').value || '').trim(),
   };
-  reader.onerror = () => showStatus('❌ Ошибка чтения файла', true);
-  reader.readAsText(file, 'utf-8');
 }
 
-// Drag & drop
-const _dz = document.getElementById('dropzone');
-_dz.addEventListener('dragover', e => { e.preventDefault(); _dz.classList.add('drag'); });
-_dz.addEventListener('dragleave', () => _dz.classList.remove('drag'));
-_dz.addEventListener('drop', e => {
-  e.preventDefault(); _dz.classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if (file) {
-    try {
-      const inp = document.getElementById('fileInput');
-      const dt = new DataTransfer(); dt.items.add(file);
-      inp.files = dt.files; loadFile(inp);
-    } catch(err) {
-      // fallback: read directly
-      const fakeInp = { files: e.dataTransfer.files };
-      loadFile(fakeInp);
+async function loadFromGithub() {
+  const p = ghParams();
+  if (!p.owner) { showStatus('❌ Введи имя владельца репозитория', true); return; }
+  if (!p.repo)  { showStatus('❌ Введи название репозитория', true); return; }
+  if (!p.token) { showStatus('❌ Введи токен (PAT)', true); return; }
+
+  showStatus('⏳ Загружаю файл с GitHub...', false);
+  try {
+    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}?ref=${p.branch}&t=${Date.now()}`;
+    const headers = {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': 'Bearer ' + p.token,
+    };
+    const res = await fetch(url, { headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'HTTP ' + res.status);
     }
+    const data = await res.json();
+    ghFileSha = data.sha;
+    // Decode base64 → UTF-8
+    const binary = atob(data.content.replace(/\n/g, ''));
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    originalContent = new TextDecoder('utf-8').decode(bytes);
+
+    parseValues();
+
+    // Show success banner
+    const banner = document.getElementById('loaded-banner');
+    banner.innerHTML = `✅ Файл загружен: <b>${p.owner}/${p.repo}/${p.path}</b> (ветка: ${p.branch})<br><small style="font-weight:700;font-size:12px;opacity:0.7">Меняй цены ниже и нажимай «Сохранить на GitHub»</small>`;
+    banner.style.display = 'block';
+
+    // Show save button
+    document.getElementById('btn-gh-save').style.display = 'block';
+
+    showStatus('✅ Готово! Меняй значения и нажимай «Сохранить на GitHub»', false);
+  } catch(err) {
+    showStatus('❌ Ошибка: ' + err.message, true);
   }
+}
+
+async function saveToGithub() {
+  if (!originalContent) { showStatus('❌ Сначала загрузи файл с GitHub!', true); return; }
+  const p = ghParams();
+  if (!p.token) { showStatus('❌ Введи токен!', true); return; }
+
+  const modded = buildModifiedContent();
+  if (!modded) return;
+
+  showStatus('⏳ Сохраняю на GitHub...', false);
+  try {
+    const b64 = btoa(unescape(encodeURIComponent(modded)));
+    const now = new Date().toLocaleString('ru-RU');
+    const body = {
+      message: `⚙️ Обновление цен (${now})`,
+      content: b64,
+      branch: p.branch,
+      sha: ghFileSha,
+    };
+    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + p.token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'HTTP ' + res.status);
+    }
+    const result = await res.json();
+    // Update sha for next save
+    if (result.content && result.content.sha) ghFileSha = result.content.sha;
+    // Update originalContent so next save works correctly
+    originalContent = modded;
+    showStatus('✅ Сохранено на GitHub! Изменения уже в репозитории.', false);
+  } catch(err) {
+    showStatus('❌ Ошибка сохранения: ' + err.message, true);
+  }
+}
+
+// Save fields to localStorage
+['gh-owner','gh-repo','gh-path','gh-branch'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const saved = localStorage.getItem('cfg_' + id);
+  if (saved) el.value = saved;
+  el.addEventListener('input', () => localStorage.setItem('cfg_' + id, el.value));
 });
 
 // ── PARSE VALUES FROM FILE ───────────────────────────────────────────────────
@@ -434,10 +471,10 @@ function onValueChange(id, val) {
   else row.classList.remove('changed');
 }
 
-// ── GENERATE FILE ─────────────────────────────────────────────────────────────
-function generateFile() {
+// ── BUILD MODIFIED CONTENT ────────────────────────────────────────────────────
+function buildModifiedContent() {
   if (!originalContent) {
-    showStatus('❌ Сначала загрузи файл index.html!', true); return;
+    showStatus('❌ Сначала загрузи файл с GitHub!', true); return null;
   }
   let content = originalContent;
   let changeCount = 0;
@@ -577,16 +614,9 @@ function generateFile() {
   }
 
   if (changeCount === 0) {
-    showStatus('ℹ️ Нет изменений — файл не скачан.', false); return;
+    showStatus('ℹ️ Нет изменений — измени хотя бы одно значение!', false); return null;
   }
-
-  // Download
-  const blob = new Blob([content], {type:'text/html;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'index.html'; a.click();
-  URL.revokeObjectURL(url);
-  showStatus(`✅ Файл скачан! Изменено параметров: ${changeCount}`, false);
+  return content;
 }
 
 function extractOriginalChestVal(key) {
@@ -623,235 +653,6 @@ function switchTab(name) {
   event.target.classList.add('active');
   document.getElementById('sec-'+name).classList.add('active');
 }
-
-// ── GITHUB INTEGRATION ────────────────────────────────────────────────────────
-let ghFileSha = null; // needed for update (PUT)
-
-function ghParams() {
-  return {
-    owner:  document.getElementById('gh-owner').value.trim(),
-    repo:   document.getElementById('gh-repo').value.trim(),
-    path:   document.getElementById('gh-path').value.trim(),
-    branch: document.getElementById('gh-branch').value.trim() || 'main',
-    token:  document.getElementById('gh-token').value.trim(),
-  };
-}
-
-async function loadFromGithub() {
-  const p = ghParams();
-  if (!p.owner || !p.repo || !p.path) {
-    showStatus('❌ Заполни: владелец, репозиторий и путь к файлу', true); return;
-  }
-  showStatus('⏳ Загружаю файл с GitHub...', false);
-  try {
-    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}?ref=${p.branch}`;
-    const headers = { 'Accept': 'application/vnd.github+json' };
-    if (p.token) headers['Authorization'] = 'Bearer ' + p.token;
-    const res = await fetch(url, { headers });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    const data = await res.json();
-    ghFileSha = data.sha;
-    // GitHub returns base64-encoded content
-    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
-    originalContent = decoded;
-    parseValues();
-    // Update dropzone UI
-    const dz = document.getElementById('dropzone');
-    dz.classList.add('file-loaded');
-    document.getElementById('dz-text').innerHTML =
-      `✅ Загружен с GitHub: <b>${p.owner}/${p.repo}/${p.path}</b><br><small style="font-size:11px;opacity:0.7">ветка: ${p.branch}</small>`;
-    showStatus(`✅ Файл загружен с GitHub! Значения распознаны — редактируй и сохраняй обратно.`, false);
-  } catch(err) {
-    showStatus('❌ Ошибка GitHub: ' + err.message, true);
-  }
-}
-
-async function saveToGithub() {
-  if (!originalContent) {
-    showStatus('❌ Сначала загрузи файл!', true); return;
-  }
-  const p = ghParams();
-  if (!p.owner || !p.repo || !p.path) {
-    showStatus('❌ Заполни: владелец, репозиторий и путь к файлу', true); return;
-  }
-  if (!p.token) {
-    showStatus('❌ Для сохранения на GitHub нужен Personal Access Token!', true); return;
-  }
-
-  // Build modified content same way as generateFile()
-  const modded = buildModifiedContent();
-  if (!modded) return;
-
-  showStatus('⏳ Сохраняю на GitHub...', false);
-  try {
-    // encode to base64 (UTF-8 safe)
-    const b64 = btoa(unescape(encodeURIComponent(modded)));
-    const now = new Date().toLocaleString('ru-RU');
-    const body = {
-      message: `⚙️ Конфигуратор: обновление цен (${now})`,
-      content: b64,
-      branch: p.branch,
-    };
-    if (ghFileSha) body.sha = ghFileSha;
-
-    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}`;
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + p.token,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    const result = await res.json();
-    // Update sha for next save
-    ghFileSha = result.content && result.content.sha ? result.content.sha : ghFileSha;
-    showStatus(`✅ Файл сохранён на GitHub! Коммит: ${result.commit && result.commit.sha ? result.commit.sha.slice(0,7) : 'ok'}`, false);
-  } catch(err) {
-    showStatus('❌ Ошибка сохранения: ' + err.message, true);
-  }
-}
-
-function buildModifiedContent() {
-  // Same logic as generateFile() but returns content instead of downloading
-  let content = originalContent;
-  let changeCount = 0;
-
-  const replaceFirst = (haystack, needle, replacement) => {
-    const idx = haystack.indexOf(needle);
-    if (idx === -1) return haystack;
-    return haystack.slice(0, idx) + replacement + haystack.slice(idx + needle.length);
-  };
-
-  const cpMatch = content.match(/CHEST_PRICES\s*=\s*\{[^}]+\}/);
-  if (cpMatch) {
-    const keys = ['common','rare','epic','epic_chest','legend','storm','medium_storm','ultra_storm'];
-    const idMap = {common:'chest_common',rare:'chest_rare',epic:'chest_epic',epic_chest:'chest_epic_chest',legend:'chest_legend',storm:'chest_storm',medium_storm:'chest_med_storm',ultra_storm:'chest_ultra'};
-    const parts = keys.map(k => {
-      const cfg_id = idMap[k];
-      const v = values[cfg_id];
-      const val = (v && v.current !== null && v.current !== undefined) ? Math.round(v.current) : extractOriginalChestVal(k);
-      if (v && v.current !== v.original) changeCount++;
-      return `${k}:${val}`;
-    });
-    const commentMatch = cpMatch[0].match(/\}(.*)/);
-    const comment = commentMatch ? commentMatch[1] : '';
-    const newObj = `CHEST_PRICES = {${parts.join(',')}}`;
-    content = content.replace(cpMatch[0], newObj + comment);
-  }
-
-  const constMap = [
-    {id:'cashback_rate',  search:'CASHBACK_RATE    = ', float:true},
-    {id:'cashback_min',   search:'CASHBACK_MIN     = '},
-    {id:'cashback_max',   search:'CASHBACK_MAX     = '},
-    {id:'roulette_spin',  search:'ROULETTE_SPIN_COST = '},
-    {id:'neon_spin',      search:'NEON_SPIN_COST = '},
-    {id:'sub_dm',         search:'DM_COST = ', comment:true},
-    {id:'sub_fd',         search:'FD_COST = ', comment:true},
-    {id:'shop_gold_gems', search:'GOLD_RATE_GEMS  = '},
-    {id:'shop_gold_stars',search:'GOLD_RATE_STARS = '},
-    {id:'shop_prgram_gems',search:'PRGRAM_RATE_GEMS = '},
-    {id:'shop_prgram_out', search:'PRGRAM_RATE_OUT  = '},
-  ];
-  for (const cm of constMap) {
-    const v = values[cm.id];
-    if (!v || v.current === null || v.current === v.original) continue;
-    const re = new RegExp('(' + cm.search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(\\d+(?:\\.\\d+)?)(;?)');
-    if (content.match(re)) {
-      const newVal = cm.float ? v.current : Math.round(v.current);
-      content = content.replace(re, '$1' + newVal + '$3');
-      changeCount++;
-    }
-  }
-
-  const vipV = values['sub_vip'];
-  if (vipV && vipV.current !== null && vipV.current !== vipV.original) {
-    content = content.replace(/const VIP_COST = \d+/g, `const VIP_COST = ${Math.round(vipV.current)}`);
-    changeCount++;
-  }
-  const cbV = values['shop_click_base_cost'];
-  if (cbV && cbV.current !== null && cbV.current !== cbV.original) {
-    content = content.replace(/Math\.round\(\d+ \* Math\.pow/, `Math.round(${Math.round(cbV.current)} * Math.pow`);
-    changeCount++;
-  }
-  const pctSmall = values['shop_pct_small'];
-  if (pctSmall && pctSmall.current !== null && pctSmall.current !== pctSmall.original) {
-    content = content.replace(/PCT_SMALL_COST = \d+/, `PCT_SMALL_COST = ${Math.round(pctSmall.current)}`);
-    changeCount++;
-  }
-  const pctBig = values['shop_pct_big'];
-  if (pctBig && pctBig.current !== null && pctBig.current !== pctBig.original) {
-    content = content.replace(/PCT_BIG_COST   = \d+/, `PCT_BIG_COST   = ${Math.round(pctBig.current)}`);
-    changeCount++;
-  }
-
-  const formatNumSp = (n) => n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : n.toString();
-  const visualChestIds = ['chest_common','chest_rare','chest_epic','chest_epic_chest','chest_legend'];
-  const visualPriceMatches = [...content.matchAll(/<div class="chest-card-price">([\d\s\u00a0]+)\s*💎<\/div>/g)];
-  for (let i = 0; i < visualChestIds.length && i < visualPriceMatches.length; i++) {
-    const vid = visualChestIds[i];
-    const v = values[vid];
-    if (!v || v.current === null || v.current === v.original) continue;
-    const newVal = Math.round(v.current);
-    const oldText = visualPriceMatches[i][1].trim();
-    const newText = formatNumSp(newVal);
-    const escapedOld = oldText.replace(/[\u00a0]/g, '\\s').replace(/ /g, '\\s');
-    const re = new RegExp(`(<div class="chest-card-price">)${escapedOld}\\s*💎(<\\/div>)`);
-    content = content.replace(re, `$1${newText} 💎$2`);
-  }
-
-  const bonusMap = [
-    {id:'bonus_xp500',  bonusId:'xp500'},
-    {id:'bonus_xp2',    bonusId:'xp2'},
-    {id:'bonus_xp15',   bonusId:'xp15'},
-    {id:'bonus_xp3_10', bonusId:'xp3_10'},
-    {id:'bonus_energy', bonusId:'energy_refill'},
-  ];
-  for (const bm of bonusMap) {
-    const v = values[bm.id];
-    if (!v || v.current === null || v.current === v.original) continue;
-    const newVal = Math.round(v.current);
-    const re1 = new RegExp(`buyBonus\\('${bm.bonusId}',(\\d+)\\)`, 'g');
-    content = content.replace(re1, `buyBonus('${bm.bonusId}',${newVal})`);
-    const re2 = new RegExp(`(id:'${bm.bonusId}'[^}]+cost:')\\d+( '\\s*\\+\\s*diaIcon)`, 'g');
-    content = content.replace(re2, `$1${newVal}$2`);
-    changeCount++;
-  }
-
-  const vipRaw = values['shop_vip_cost_raw'];
-  if (vipRaw && vipRaw.current !== null && vipRaw.current !== vipRaw.original) {
-    const re = new RegExp(`xp >= 269750 \\? 'green' : 'gray'`,'g');
-    content = content.replace(re, `xp >= ${Math.round(vipRaw.current)} ? 'green' : 'gray'`);
-    content = content.replace(/openModal\('vip'\)[^`]+269750/g, m => m.replace('269750', Math.round(vipRaw.current)));
-    changeCount++;
-  }
-
-  if (changeCount === 0) {
-    showStatus('ℹ️ Нет изменений — нечего сохранять.', false); return null;
-  }
-  return content;
-}
-
-function toggleGhPanel(el) {
-  el.classList.toggle('collapsed');
-  document.getElementById('gh-body').classList.toggle('hidden');
-}
-
-// Save gh fields to localStorage for convenience
-['gh-owner','gh-repo','gh-path','gh-branch'].forEach(id => {
-  const el = document.getElementById(id);
-  const saved = localStorage.getItem('cfg_'+id);
-  if (saved) el.value = saved;
-  el.addEventListener('input', () => localStorage.setItem('cfg_'+id, el.value));
-});
 
 // Initial render with empty placeholders
 renderAllInputs();
