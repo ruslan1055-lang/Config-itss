@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💎 Diamond Clicker — Конфигуратор</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#060b14;--surface:rgba(10,20,40,0.98);--card:rgba(255,255,255,0.06);
+  --card2:rgba(255,255,255,0.1);--border:rgba(255,255,255,0.1);
+  --text:#fff;--text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.3);
+  --green:#00e676;--blue:#00c8ff;--orange:#ffaa00;--red:#ff4655;
+  --yellow:#ffe566;--purple:#c77dff;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px;}
+h1{text-align:center;font-size:22px;margin-bottom:6px;background:linear-gradient(135deg,#00c8ff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.subtitle{text-align:center;color:var(--text2);font-size:13px;margin-bottom:24px;}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;}
+.tab{padding:8px 18px;border-radius:100px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--text2);transition:all .2s;}
+.tab.active{background:rgba(0,200,255,0.15);border-color:rgba(0,200,255,0.4);color:var(--blue);}
+.tab:hover:not(.active){background:var(--card2);color:var(--text);}
+.section{display:none;}
+.section.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
+.card-title{font-size:15px;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.row:last-child{border-bottom:none;padding-bottom:0;}
+.row-label{flex:1;font-size:14px;font-weight:800;color:var(--text2);}
+.row-label small{display:block;font-size:11px;font-weight:700;color:var(--text3);margin-top:2px;}
+.row-input{display:flex;align-items:center;gap:8px;}
+.num-input{background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;width:130px;text-align:right;outline:none;transition:border-color .2s;}
+.num-input:focus{border-color:rgba(0,200,255,0.5);background:rgba(0,200,255,0.07);}
+.unit{font-size:12px;font-weight:800;color:var(--text3);white-space:nowrap;}
+.changed .num-input{border-color:rgba(0,230,120,0.5);background:rgba(0,230,120,0.07);}
+.tag{font-size:10px;font-weight:900;padding:2px 8px;border-radius:100px;letter-spacing:0.3px;}
+.tag-line{line-height:1.2;color:var(--line-color,var(--text2));}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:28px;margin-bottom:40px;}
+.btn{padding:14px 28px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;transition:all .2s;}
+.btn-gen{background:linear-gradient(135deg,#00c8ff,#0099cc);color:#000;}
+.btn-gen:hover{filter:brightness(1.15);}
+.btn-reset{background:rgba(255,70,85,0.15);border:1px solid rgba(255,70,85,0.3);color:var(--red);}
+.btn-reset:hover{background:rgba(255,70,85,0.25);}
+.status-bar{background:rgba(0,230,120,0.1);border:1px solid rgba(0,230,120,0.25);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;font-weight:800;color:var(--green);display:none;text-align:center;}
+.status-bar.error{background:rgba(255,70,85,0.1);border-color:rgba(255,70,85,0.25);color:var(--red);}
+.diff-count{display:inline-block;background:rgba(0,200,255,0.15);border:1px solid rgba(0,200,255,0.3);color:var(--blue);border-radius:100px;padding:2px 10px;font-size:12px;margin-left:8px;}
+.section-header{font-size:13px;font-weight:900;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;padding-left:4px;}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:900;padding:3px 10px;border-radius:100px;background:rgba(255,170,0,0.15);color:var(--orange);border:1px solid rgba(255,170,0,0.25);}
+textarea#output{width:100%;height:200px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:12px;color:#69ff9a;font-family:monospace;font-size:12px;padding:14px;outline:none;resize:vertical;display:none;margin-top:16px;}
+.instructions{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:20px;font-size:13px;color:var(--text2);line-height:1.7;}
+.instructions b{color:var(--text);}
+.instructions ol{padding-left:20px;margin-top:8px;}
+.instructions li{margin-bottom:6px;}
+.dl-btn{display:inline-block;background:linear-gradient(135deg,var(--green),#00b85c);color:#000;padding:12px 24px;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;border:none;text-decoration:none;margin-top:12px;transition:filter .2s;}
+.dl-btn:hover{filter:brightness(1.15);}
+#dropzone{border:2px dashed rgba(0,200,255,0.3);border-radius:16px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:24px;color:var(--text2);font-size:14px;font-weight:800;}
+#dropzone:hover,#dropzone.drag{border-color:rgba(0,200,255,0.7);background:rgba(0,200,255,0.05);color:var(--blue);}
+#dropzone input{display:none;}
+.file-loaded{background:rgba(0,230,120,0.08);border-color:rgba(0,230,120,0.4);color:var(--green);}
+
+/* GitHub Panel */
+.gh-panel{background:rgba(10,20,40,0.98);border:1px solid rgba(100,200,100,0.25);border-radius:16px;padding:18px;margin-bottom:16px;}
+.gh-panel-title{font-size:14px;font-weight:900;color:#7ee787;margin-bottom:14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.gh-panel-title svg{transition:transform .2s;}
+.gh-panel-title.collapsed svg{transform:rotate(-90deg);}
+.gh-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.gh-field{display:flex;flex-direction:column;gap:5px;}
+.gh-field.full{grid-column:1/-1;}
+.gh-field label{font-size:11px;font-weight:900;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;}
+.gh-input{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 13px;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;outline:none;width:100%;transition:border-color .2s;}
+.gh-input:focus{border-color:rgba(100,200,100,0.5);background:rgba(100,200,100,0.07);}
+.gh-input::placeholder{color:rgba(255,255,255,0.2);}
+.gh-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-gh-load{background:rgba(100,200,100,0.15);border:1px solid rgba(100,200,100,0.35);color:#7ee787;padding:11px 20px;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;transition:all .2s;}
+.btn-gh-load:hover{background:rgba(100,200,100,0.25);}
+.btn-gh-save{background:linear-gradient(135deg,#238636,#2ea043);color:#fff;padding:11px 20px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;transition:filter .2s;display:none;}
+.btn-gh-save:hover{filter:brightness(1.15);}
+.btn-gh-save.visible{display:inline-block;}
+.gh-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;line-height:1.6;}
+.gh-hint a{color:rgba(100,200,100,0.7);text-decoration:none;}
+.gh-hint a:hover{color:#7ee787;}
+.gh-body{transition:all .2s;}
+.gh-body.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<h1>💎 Diamond Clicker — Конфигуратор</h1>
+<p class="subtitle">Редактируй цены игры и скачивай готовый файл</p>
+
+<!-- GITHUB PANEL -->
+<div class="gh-panel">
+  <div class="gh-panel-title" onclick="toggleGhPanel(this)" id="gh-title">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    🐙 Загрузить / Сохранить через GitHub
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style="margin-left:auto"><path d="M2 4l4 4 4-4"/></svg>
+  </div>
+  <div class="gh-body" id="gh-body">
+    <div class="gh-fields">
+      <div class="gh-field">
+        <label>👤 Владелец репозитория</label>
+        <input class="gh-input" id="gh-owner" placeholder="username или org" autocomplete="off">
+      </div>
+      <div class="gh-field">
+        <label>📁 Репозиторий</label>
+        <input class="gh-input" id="gh-repo" placeholder="my-game" autocomplete="off">
+      </div>
+      <div class="gh-field">
+        <label>📄 Путь к файлу</label>
+        <input class="gh-input" id="gh-path" placeholder="index.html или src/index.html" autocomplete="off" value="index.html">
+      </div>
+      <div class="gh-field">
+        <label>🌿 Ветка</label>
+        <input class="gh-input" id="gh-branch" placeholder="main" autocomplete="off" value="main">
+      </div>
+      <div class="gh-field full">
+        <label>🔑 Personal Access Token (PAT) — нужен для записи</label>
+        <input class="gh-input" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      </div>
+    </div>
+    <div class="gh-actions">
+      <button class="btn-gh-load" onclick="loadFromGithub()">⬇️ Загрузить с GitHub</button>
+      <button class="btn-gh-save visible" id="btn-gh-save" onclick="saveToGithub()">⬆️ Сохранить на GitHub</button>
+    </div>
+    <div class="gh-hint">
+      🔑 <b>Где взять токен:</b> GitHub → <a href="https://github.com/settings/tokens/new" target="_blank">Settings → Developer settings → Tokens (classic)</a> → выдай права <b>repo</b>.<br>
+      🔒 Токен хранится только в браузере и никуда не отправляется, кроме api.github.com.
+    </div>
+  </div>
+</div>
+
+<div id="dropzone">
+  <input type="file" id="fileInput" accept=".html" style="display:none" onchange="loadFile(this)">
+  <div id="dz-text">📂 Загрузи index.html игры сюда<br><small style="font-weight:700;font-size:12px;opacity:0.6">или кликни для выбора файла</small></div>
+  <br>
+  <button onclick="event.stopPropagation();document.getElementById('fileInput').click()" style="margin-top:8px;padding:10px 24px;border-radius:100px;background:rgba(0,200,255,0.15);border:1px solid rgba(0,200,255,0.35);color:#00c8ff;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;">📁 Выбрать файл</button>
+</div>
+
+<div id="status" class="status-bar"></div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('chests')">📦 Сундуки</button>
+  <button class="tab" onclick="switchTab('roulette')">🎰 Рулетки</button>
+  <button class="tab" onclick="switchTab('subscriptions')">⭐ Подписки</button>
+  <button class="tab" onclick="switchTab('shop')">🛒 Магазин</button>
+  <button class="tab" onclick="switchTab('bonuses')">🎁 Бонусы</button>
+  <button class="tab" onclick="switchTab('other')">⚙️ Прочее</button>
+</div>
+
+<!-- СУНДУКИ -->
+<div class="section active" id="sec-chests">
+  <div class="section-header">Цены сундуков (в 💎 алмазах)</div>
+  <div class="card">
+    <div class="card-title">📦 Обычные сундуки</div>
+    <div id="rows-chests"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🌪️ Storm сундуки</div>
+    <div id="rows-storm"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">💸 Кэшбек настройки</div>
+    <div id="rows-cashback"></div>
+  </div>
+</div>
+
+<!-- РУЛЕТКИ -->
+<div class="section" id="sec-roulette">
+  <div class="section-header">Стоимость спинов (в ⚡ молниях)</div>
+  <div class="card">
+    <div id="rows-roulette"></div>
+  </div>
+</div>
+
+<!-- ПОДПИСКИ -->
+<div class="section" id="sec-subscriptions">
+  <div class="section-header">Стоимость подписок (в ⚡ молниях)</div>
+  <div class="card">
+    <div id="rows-subs"></div>
+  </div>
+</div>
+
+<!-- МАГАЗИН -->
+<div class="section" id="sec-shop">
+  <div class="section-header">Прокачка и обмен</div>
+  <div class="card">
+    <div class="card-title">🔧 Улучшения кликов</div>
+    <div id="rows-shop-upgrades"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🏅 Gold → Stars обмен</div>
+    <div id="rows-shop-gold"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🪙 PRGRAM обмен</div>
+    <div id="rows-shop-prgram"></div>
+  </div>
+</div>
+
+<!-- БОНУСЫ -->
+<div class="section" id="sec-bonuses">
+  <div class="section-header">Цены бонусов в магазине (в 💎 алмазах)</div>
+  <div class="card">
+    <div id="rows-bonuses"></div>
+  </div>
+</div>
+
+<!-- ПРОЧЕЕ -->
+<div class="section" id="sec-other">
+  <div class="section-header">Другие настройки</div>
+  <div class="card">
+    <div class="card-title">⚡ Прокачка %% дохода</div>
+    <div id="rows-pct"></div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn btn-gen" onclick="generateFile()">⬇️ Скачать изменённый файл</button>
+  <button class="btn btn-reset" onclick="resetAll()">↺ Сбросить все изменения</button>
+</div>
+
+<div class="instructions">
+  <b>Как использовать:</b>
+  <ol>
+    <li><b>Способ 1 — GitHub:</b> Заполни поля выше (владелец/репо/путь/токен) и нажми «Загрузить с GitHub», затем после изменений — «Сохранить на GitHub»</li>
+    <li><b>Способ 2 — файл:</b> Загрузи файл <b>index.html</b> через кнопку ниже</li>
+    <li>Измени нужные значения в полях</li>
+    <li>Нажми <b>«Скачать изменённый файл»</b></li>
+    <li>Замени оригинальный файл на сайте скачанным</li>
+  </ol>
+  <br>
+  <b>Зелёная рамка</b> = значение изменено от оригинала<br>
+  <b>Примечание:</b> Все изменения применяются точечно по строкам файла — ничего лишнего не трогается.
+</div>
+
+<script>
+// ── CONFIG MAP ──────────────────────────────────────────────────────────────
+// Each entry: { id, label, sub, searchFor, replacePattern, unit, section, group }
+const CONFIG = [
+  // CHESTS
+  {id:'chest_common',    label:'Обычный сундук',     sub:'common',      searchFor:`CHEST_PRICES = {common:`,      replaceKey:'common',       unit:'💎', section:'chests', group:'rows-chests'},
+  {id:'chest_rare',      label:'Редкий сундук',       sub:'rare',        searchFor:`CHEST_PRICES`,                 replaceKey:'rare',          unit:'💎', section:'chests', group:'rows-chests'},
+  {id:'chest_epic',      label:'Сверхредкий сундук',  sub:'epic (не chest)', searchFor:`CHEST_PRICES`,             replaceKey:'epic',          unit:'💎', section:'chests', group:'rows-chests'},
+  {id:'chest_epic_chest',label:'Эпический сундук',    sub:'epic_chest',  searchFor:`CHEST_PRICES`,                 replaceKey:'epic_chest',    unit:'💎', section:'chests', group:'rows-chests'},
+  {id:'chest_legend',    label:'Легендарный сундук',  sub:'legend',      searchFor:`CHEST_PRICES`,                 replaceKey:'legend',        unit:'💎', section:'chests', group:'rows-chests'},
+  {id:'chest_storm',     label:'Standart Storm',      sub:'storm',       searchFor:`CHEST_PRICES`,                 replaceKey:'storm',         unit:'💎', section:'chests', group:'rows-storm'},
+  {id:'chest_med_storm', label:'Medium Storm',        sub:'medium_storm',searchFor:`CHEST_PRICES`,                 replaceKey:'medium_storm',  unit:'💎', section:'chests', group:'rows-storm'},
+  {id:'chest_ultra',     label:'Ultra Storm',         sub:'ultra_storm', searchFor:`CHEST_PRICES`,                 replaceKey:'ultra_storm',   unit:'💎', section:'chests', group:'rows-storm'},
+  {id:'cashback_rate',   label:'Ставка кэшбека',      sub:'от стоимости покупки', type:'float', searchFor:`CASHBACK_RATE    = `, replaceConst:'CASHBACK_RATE', unit:'(0.02 = 2%)', section:'chests', group:'rows-cashback'},
+  {id:'cashback_min',    label:'Мин. выплата',        sub:'минимум для получения', searchFor:`CASHBACK_MIN     = `, replaceConst:'CASHBACK_MIN', unit:'💎', section:'chests', group:'rows-cashback'},
+  {id:'cashback_max',    label:'Потолок кэшбека',     sub:'максимум в пуле', searchFor:`CASHBACK_MAX     = `, replaceConst:'CASHBACK_MAX', unit:'💎', section:'chests', group:'rows-cashback'},
+
+  // ROULETTE
+  {id:'roulette_spin',   label:'Обычная рулетка',     sub:'спин стоит', searchFor:`ROULETTE_SPIN_COST = `, replaceConst:'ROULETTE_SPIN_COST', unit:'⚡', section:'roulette', group:'rows-roulette'},
+  {id:'neon_spin',       label:'Неоновая рулетка',    sub:'спин стоит', searchFor:`NEON_SPIN_COST = `,    replaceConst:'NEON_SPIN_COST',     unit:'⚡', section:'roulette', group:'rows-roulette'},
+
+  // SUBSCRIPTIONS
+  {id:'sub_vip',         label:'VIP подписка',        sub:'×2 💎 · ×3 ⚡ · 16 тем', searchFor:`const VIP_COST = `, replaceConst:'VIP_COST',  unit:'⚡', section:'subscriptions', group:'rows-subs', multiline:true},
+  {id:'sub_dm',          label:'Diamond Magnate',     sub:'30 000 💎/мес · по 500/день', searchFor:`const DM_COST = `, replaceConst:'DM_COST',  unit:'⚡', section:'subscriptions', group:'rows-subs'},
+  {id:'sub_fd',          label:'Fire Dealer',         sub:'подписка', searchFor:`const FD_COST = `, replaceConst:'FD_COST',  unit:'⚡', section:'subscriptions', group:'rows-subs'},
+
+  // SHOP — upgrades
+  {id:'shop_click_base_cost', label:'База стоимости апгрейда клика', sub:'уровень 0→1, каждый след. +50%', searchFor:`Math.round(3500 * Math.pow(`, replaceRaw:'3500', unit:'⚡', section:'shop', group:'rows-shop-upgrades'},
+  {id:'shop_pct_small',  label:'Апгрейд +0.1%',       sub:'от максимальных алмазов', searchFor:`PCT_SMALL_COST = `, replaceConst:'PCT_SMALL_COST', unit:'⚡', section:'shop', group:'rows-shop-upgrades', multiline:true},
+  {id:'shop_pct_big',    label:'Апгрейд +1%',         sub:'от максимальных алмазов', searchFor:`PCT_BIG_COST   = `, replaceConst:'PCT_BIG_COST',   unit:'⚡', section:'shop', group:'rows-shop-upgrades', multiline:true},
+
+  // SHOP — gold
+  {id:'shop_gold_gems',  label:'Gold: алмазов за 1 порцию', sub:'→ Stars', searchFor:`GOLD_RATE_GEMS  = `, replaceConst:'GOLD_RATE_GEMS',  unit:'💎', section:'shop', group:'rows-shop-gold'},
+  {id:'shop_gold_stars', label:'Gold: звёзд за 1 порцию',   sub:'⭐ Telegram Stars', searchFor:`GOLD_RATE_STARS = `, replaceConst:'GOLD_RATE_STARS', unit:'⭐', section:'shop', group:'rows-shop-gold'},
+
+  // SHOP — prgram
+  {id:'shop_prgram_gems', label:'PRGRAM: алмазов за обмен', sub:'за 1 единицу PRGRAM', searchFor:`PRGRAM_RATE_GEMS = `, replaceConst:'PRGRAM_RATE_GEMS', unit:'💎', section:'shop', group:'rows-shop-prgram'},
+  {id:'shop_prgram_out',  label:'PRGRAM: выдаётся за обмен',sub:'количество PRGRAM',    searchFor:`PRGRAM_RATE_OUT  = `, replaceConst:'PRGRAM_RATE_OUT',  unit:'PRGRAM', section:'shop', group:'rows-shop-prgram'},
+
+  // BONUSES
+  {id:'bonus_xp500',     label:'200 ⚡ молний (мгновенно)', sub:'бонус xp500', searchFor:`buyBonus('xp500',`, replaceConst:'bonus_xp500_v', unit:'💎', section:'bonuses', group:'rows-bonuses', bonusId:'xp500'},
+  {id:'bonus_xp2',       label:'Х2 опыт · 30 минут',       sub:'бонус xp2',   searchFor:`buyBonus('xp2',`,   replaceConst:'bonus_xp2_v',   unit:'💎', section:'bonuses', group:'rows-bonuses', bonusId:'xp2'},
+  {id:'bonus_xp15',      label:'Х1.5 опыт · 15 минут',     sub:'бонус xp15',  searchFor:`buyBonus('xp15',`,  replaceConst:'bonus_xp15_v',  unit:'💎', section:'bonuses', group:'rows-bonuses', bonusId:'xp15'},
+  {id:'bonus_xp3_10',    label:'Х3 опыт · 10 минут',       sub:'бонус xp3_10',searchFor:`buyBonus('xp3_10',`,replaceConst:'bonus_xp310_v', unit:'💎', section:'bonuses', group:'rows-bonuses', bonusId:'xp3_10'},
+  {id:'bonus_energy',    label:'Восстановить энергию',      sub:'мгновенно',   searchFor:`buyBonus('energy_refill',`, replaceConst:'bonus_nrg_v', unit:'💎', section:'bonuses', group:'rows-bonuses', bonusId:'energy_refill'},
+
+  // PCT upgrades (other)
+  {id:'shop_vip_cost_raw', label:'VIP в шопе (отдельная проверка)', sub:'>=269750 в renderShop', searchFor:`>= 269750`, replaceRaw2:'269750', unit:'⚡', section:'other', group:'rows-pct'},
+];
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+let originalContent = null;
+let values = {}; // id → {original, current}
+
+// ── FILE LOAD ────────────────────────────────────────────────────────────────
+function loadFile(input) {
+  const file = input.files && input.files[0];
+  if (!file) { showStatus('❌ Файл не выбран', true); return; }
+  if (!file.name.endsWith('.html') && !file.name.endsWith('.htm')) {
+    showStatus('❌ Нужен файл .html', true); return;
+  }
+  showStatus('⏳ Загружаю файл...', false);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      originalContent = e.target.result;
+      if (!originalContent || originalContent.length < 100) {
+        showStatus('❌ Файл пустой или повреждён', true); return;
+      }
+      parseValues();
+      const dz = document.getElementById('dropzone');
+      dz.classList.add('file-loaded');
+      document.getElementById('dz-text').innerHTML =
+        `✅ Загружен: <b>${file.name}</b> (${(file.size/1024).toFixed(0)} KB)<br><small style="font-size:11px;opacity:0.7">Кликни «Выбрать файл» чтобы загрузить другой</small>`;
+      showStatus('✅ Файл загружен! Значения распознаны — редактируй и скачивай.', false);
+    } catch(err) {
+      showStatus('❌ Ошибка разбора файла: ' + err.message, true);
+    }
+  };
+  reader.onerror = () => showStatus('❌ Ошибка чтения файла', true);
+  reader.readAsText(file, 'utf-8');
+}
+
+// Drag & drop
+const _dz = document.getElementById('dropzone');
+_dz.addEventListener('dragover', e => { e.preventDefault(); _dz.classList.add('drag'); });
+_dz.addEventListener('dragleave', () => _dz.classList.remove('drag'));
+_dz.addEventListener('drop', e => {
+  e.preventDefault(); _dz.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    try {
+      const inp = document.getElementById('fileInput');
+      const dt = new DataTransfer(); dt.items.add(file);
+      inp.files = dt.files; loadFile(inp);
+    } catch(err) {
+      // fallback: read directly
+      const fakeInp = { files: e.dataTransfer.files };
+      loadFile(fakeInp);
+    }
+  }
+});
+
+// ── PARSE VALUES FROM FILE ───────────────────────────────────────────────────
+function parseValues() {
+  if (!originalContent) return;
+  const c = originalContent;
+
+  const parseConst = (keyword) => {
+    const re = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(\\d+(?:\\.\\d+)?)');
+    const m = c.match(re);
+    return m ? parseFloat(m[1]) : null;
+  };
+
+  // CHEST_PRICES
+  const cpMatch = c.match(/CHEST_PRICES\s*=\s*\{([^}]+)\}/);
+  const cpMap = {};
+  if (cpMatch) {
+    cpMatch[1].replace(/(\w+):(\d+)/g, (_,k,v) => { cpMap[k] = +v; });
+  }
+
+  const extractors = {
+    chest_common:    () => cpMap.common,
+    chest_rare:      () => cpMap.rare,
+    chest_epic:      () => cpMap.epic,
+    chest_epic_chest:() => cpMap.epic_chest,
+    chest_legend:    () => cpMap.legend,
+    chest_storm:     () => cpMap.storm,
+    chest_med_storm: () => cpMap.medium_storm,
+    chest_ultra:     () => cpMap.ultra_storm,
+    cashback_rate:   () => parseConst('CASHBACK_RATE    = '),
+    cashback_min:    () => parseConst('CASHBACK_MIN     = '),
+    cashback_max:    () => parseConst('CASHBACK_MAX     = '),
+    roulette_spin:   () => parseConst('ROULETTE_SPIN_COST = '),
+    neon_spin:       () => parseConst('NEON_SPIN_COST = '),
+    sub_vip:         () => { const m = c.match(/const VIP_COST = (\d+)/); return m ? +m[1] : null; },
+    sub_dm:          () => parseConst('DM_COST = '),
+    sub_fd:          () => parseConst('FD_COST = '),
+    shop_click_base_cost: () => { const m = c.match(/Math\.round\((\d+) \* Math\.pow/); return m ? +m[1] : null; },
+    shop_pct_small:  () => { const m = c.match(/PCT_SMALL_COST = (\d+)/); return m ? +m[1] : null; },
+    shop_pct_big:    () => { const m = c.match(/PCT_BIG_COST   = (\d+)/); return m ? +m[1] : null; },
+    shop_gold_gems:  () => parseConst('GOLD_RATE_GEMS  = '),
+    shop_gold_stars: () => parseConst('GOLD_RATE_STARS = '),
+    shop_prgram_gems:() => parseConst('PRGRAM_RATE_GEMS = '),
+    shop_prgram_out: () => parseConst('PRGRAM_RATE_OUT  = '),
+    bonus_xp500:     () => { const m = c.match(/buyBonus\('xp500',(\d+)\)/); return m ? +m[1] : null; },
+    bonus_xp2:       () => { const m = c.match(/buyBonus\('xp2',(\d+)\)/); return m ? +m[1] : null; },
+    bonus_xp15:      () => { const m = c.match(/buyBonus\('xp15',(\d+)\)/); return m ? +m[1] : null; },
+    bonus_xp3_10:    () => { const m = c.match(/buyBonus\('xp3_10',(\d+)\)/); return m ? +m[1] : null; },
+    bonus_energy:    () => { const m = c.match(/buyBonus\('energy_refill',(\d+)\)/); return m ? +m[1] : null; },
+    shop_vip_cost_raw: () => { const m = c.match(/>= (\d+) \? 'green' : 'gray'\}\" onclick=\"closeModal\('shop'\);setTimeout\(\(\)=>openModal\('vip'\)/); return m ? +m[1] : null; },
+  };
+
+  values = {};
+  for (const cfg of CONFIG) {
+    const fn = extractors[cfg.id];
+    const v = fn ? fn() : null;
+    values[cfg.id] = { original: v, current: v };
+  }
+  renderAllInputs();
+}
+
+// ── RENDER INPUTS ────────────────────────────────────────────────────────────
+function renderAllInputs() {
+  const groups = {};
+  for (const cfg of CONFIG) {
+    if (!groups[cfg.group]) groups[cfg.group] = [];
+    groups[cfg.group].push(cfg);
+  }
+  for (const [gid, cfgs] of Object.entries(groups)) {
+    const el = document.getElementById(gid);
+    if (!el) continue;
+    el.innerHTML = cfgs.map(cfg => {
+      const v = values[cfg.id];
+      const val = v ? v.current : '';
+      const step = cfg.type === 'float' ? '0.01' : '1';
+      return `
+      <div class="row" id="row-${cfg.id}">
+        <div class="row-label">${cfg.label}<small>${cfg.sub || ''}</small></div>
+        <div class="row-input">
+          <input class="num-input" type="number" step="${step}" min="0"
+            id="inp-${cfg.id}" value="${val !== null && val !== undefined ? val : ''}"
+            placeholder="н/д" oninput="onValueChange('${cfg.id}',this.value)">
+          <span class="unit">${cfg.unit}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function onValueChange(id, val) {
+  if (!values[id]) return;
+  values[id].current = val === '' ? null : parseFloat(val);
+  const row = document.getElementById('row-'+id);
+  const original = values[id].original;
+  const changed = val !== '' && parseFloat(val) !== original;
+  if (changed) row.classList.add('changed');
+  else row.classList.remove('changed');
+}
+
+// ── GENERATE FILE ─────────────────────────────────────────────────────────────
+function generateFile() {
+  if (!originalContent) {
+    showStatus('❌ Сначала загрузи файл index.html!', true); return;
+  }
+  let content = originalContent;
+  let changeCount = 0;
+
+  // Helper: replace first occurrence of exact text
+  const replaceFirst = (haystack, needle, replacement) => {
+    const idx = haystack.indexOf(needle);
+    if (idx === -1) return haystack;
+    return haystack.slice(0, idx) + replacement + haystack.slice(idx + needle.length);
+  };
+
+  // CHEST_PRICES — rebuild the whole object
+  const cpMatch = content.match(/CHEST_PRICES\s*=\s*\{[^}]+\}/);
+  if (cpMatch) {
+    const keys = ['common','rare','epic','epic_chest','legend','storm','medium_storm','ultra_storm'];
+    const idMap = {common:'chest_common',rare:'chest_rare',epic:'chest_epic',epic_chest:'chest_epic_chest',legend:'chest_legend',storm:'chest_storm',medium_storm:'chest_med_storm',ultra_storm:'chest_ultra'};
+    const parts = keys.map(k => {
+      const cfg_id = idMap[k];
+      const v = values[cfg_id];
+      const val = (v && v.current !== null && v.current !== undefined) ? Math.round(v.current) : extractOriginalChestVal(k);
+      if (v && v.current !== v.original) changeCount++;
+      return `${k}:${val}`;
+    });
+    // Extract comment after closing brace
+    const commentMatch = cpMatch[0].match(/\}(.*)/);
+    const comment = commentMatch ? commentMatch[1] : '';
+    const newObj = `CHEST_PRICES = {${parts.join(',')}}`;
+    content = content.replace(cpMatch[0], newObj + comment);
+  }
+
+  // Simple const replacements
+  const constMap = [
+    {id:'cashback_rate',  search:'CASHBACK_RATE    = ', float:true},
+    {id:'cashback_min',   search:'CASHBACK_MIN     = '},
+    {id:'cashback_max',   search:'CASHBACK_MAX     = '},
+    {id:'roulette_spin',  search:'ROULETTE_SPIN_COST = '},
+    {id:'neon_spin',      search:'NEON_SPIN_COST = '},
+    {id:'sub_dm',         search:'DM_COST = ', comment:true},
+    {id:'sub_fd',         search:'FD_COST = ', comment:true},
+    {id:'shop_gold_gems', search:'GOLD_RATE_GEMS  = '},
+    {id:'shop_gold_stars',search:'GOLD_RATE_STARS = '},
+    {id:'shop_prgram_gems',search:'PRGRAM_RATE_GEMS = '},
+    {id:'shop_prgram_out', search:'PRGRAM_RATE_OUT  = '},
+  ];
+
+  for (const cm of constMap) {
+    const v = values[cm.id];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const re = new RegExp('(' + cm.search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(\\d+(?:\\.\\d+)?)(;?)');
+    const m = content.match(re);
+    if (m) {
+      const newVal = cm.float ? v.current : Math.round(v.current);
+      content = content.replace(re, '$1' + newVal + '$3');
+      changeCount++;
+    }
+  }
+
+  // VIP_COST — appears 3 times, replace all
+  const vipV = values['sub_vip'];
+  if (vipV && vipV.current !== null && vipV.current !== vipV.original) {
+    content = content.replace(/const VIP_COST = \d+/g, `const VIP_COST = ${Math.round(vipV.current)}`);
+    changeCount++;
+  }
+
+  // Click base cost
+  const cbV = values['shop_click_base_cost'];
+  if (cbV && cbV.current !== null && cbV.current !== cbV.original) {
+    content = content.replace(/Math\.round\(\d+ \* Math\.pow/, `Math.round(${Math.round(cbV.current)} * Math.pow`);
+    changeCount++;
+  }
+
+  // PCT costs — appear twice (const def + inline usage)
+  const pctSmall = values['shop_pct_small'];
+  if (pctSmall && pctSmall.current !== null && pctSmall.current !== pctSmall.original) {
+    content = content.replace(/PCT_SMALL_COST = \d+/, `PCT_SMALL_COST = ${Math.round(pctSmall.current)}`);
+    changeCount++;
+  }
+  const pctBig = values['shop_pct_big'];
+  if (pctBig && pctBig.current !== null && pctBig.current !== pctBig.original) {
+    content = content.replace(/PCT_BIG_COST   = \d+/, `PCT_BIG_COST   = ${Math.round(pctBig.current)}`);
+    changeCount++;
+  }
+
+  // Visual chest prices in quest modal HTML (chest-card-price divs)
+  // These are hardcoded in the HTML and must be updated separately from CHEST_PRICES const
+  // Format number with spaces as thousands separator (Russian style: 1 300, 2 275)
+  const formatNum = (n) => n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') : n.toString();
+  const formatNumSp = (n) => n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : n.toString();
+
+  // Visual chest prices in quest modal HTML (chest-card-price divs)
+  const visualChestIds = ['chest_common','chest_rare','chest_epic','chest_epic_chest','chest_legend'];
+  // Extract current visual prices from content to use as old values
+  const visualPriceMatches = [...content.matchAll(/<div class="chest-card-price">([\d\s\u00a0]+)\s*💎<\/div>/g)];
+  for (let i = 0; i < visualChestIds.length && i < visualPriceMatches.length; i++) {
+    const vid = visualChestIds[i];
+    const v = values[vid];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const newVal = Math.round(v.current);
+    const oldText = visualPriceMatches[i][1].trim();
+    const newText = formatNumSp(newVal);
+    // Replace exact occurrence
+    const escapedOld = oldText.replace(/[\u00a0]/g, '\\s').replace(/ /g, '\\s');
+    const re = new RegExp(`(<div class="chest-card-price">)${escapedOld}\\s*💎(<\\/div>)`);
+    content = content.replace(re, `$1${newText} 💎$2`);
+  }
+
+  // Bonuses — both in array and in buyBonus calls
+  const bonusMap = [
+    {id:'bonus_xp500',  bonusId:'xp500'},
+    {id:'bonus_xp2',    bonusId:'xp2'},
+    {id:'bonus_xp15',   bonusId:'xp15'},
+    {id:'bonus_xp3_10', bonusId:'xp3_10'},
+    {id:'bonus_energy', bonusId:'energy_refill'},
+  ];
+  for (const bm of bonusMap) {
+    const v = values[bm.id];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const newVal = Math.round(v.current);
+    // Replace in buyBonus calls (both in array cost: and direct calls)
+    const re1 = new RegExp(`buyBonus\\('${bm.bonusId}',(\\d+)\\)`, 'g');
+    content = content.replace(re1, `buyBonus('${bm.bonusId}',${newVal})`);
+    // Also update cost string in array definition
+    // e.g. cost:'228 ' + diaIcon(14)
+    const re2 = new RegExp(`(id:'${bm.bonusId}'[^}]+cost:')\\d+( '\\s*\\+\\s*diaIcon)`, 'g');
+    content = content.replace(re2, `$1${newVal}$2`);
+    changeCount++;
+  }
+
+  // VIP shop button threshold (>=269750)
+  const vipRaw = values['shop_vip_cost_raw'];
+  if (vipRaw && vipRaw.current !== null && vipRaw.current !== vipRaw.original) {
+    // Replace literal 269750 in renderShop button context
+    const re = new RegExp(`xp >= 269750 \\? 'green' : 'gray'`,'g');
+    content = content.replace(re, `xp >= ${Math.round(vipRaw.current)} ? 'green' : 'gray'`);
+    content = content.replace(/openModal\('vip'\)[^`]+269750/g, m => m.replace('269750', Math.round(vipRaw.current)));
+    changeCount++;
+  }
+
+  if (changeCount === 0) {
+    showStatus('ℹ️ Нет изменений — файл не скачан.', false); return;
+  }
+
+  // Download
+  const blob = new Blob([content], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'index.html'; a.click();
+  URL.revokeObjectURL(url);
+  showStatus(`✅ Файл скачан! Изменено параметров: ${changeCount}`, false);
+}
+
+function extractOriginalChestVal(key) {
+  if (!originalContent) return 0;
+  const cpMatch = originalContent.match(/CHEST_PRICES\s*=\s*\{([^}]+)\}/);
+  if (!cpMatch) return 0;
+  const m = cpMatch[1].match(new RegExp(key + ':(\\d+)'));
+  return m ? +m[1] : 0;
+}
+
+function resetAll() {
+  for (const cfg of CONFIG) {
+    if (!values[cfg.id]) continue;
+    values[cfg.id].current = values[cfg.id].original;
+    const inp = document.getElementById('inp-'+cfg.id);
+    if (inp) inp.value = values[cfg.id].original !== null ? values[cfg.id].original : '';
+    const row = document.getElementById('row-'+cfg.id);
+    if (row) row.classList.remove('changed');
+  }
+  showStatus('Все значения сброшены к оригиналу.', false);
+}
+
+function showStatus(msg, isError) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status-bar' + (isError ? ' error' : '');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('sec-'+name).classList.add('active');
+}
+
+// ── GITHUB INTEGRATION ────────────────────────────────────────────────────────
+let ghFileSha = null; // needed for update (PUT)
+
+function ghParams() {
+  return {
+    owner:  document.getElementById('gh-owner').value.trim(),
+    repo:   document.getElementById('gh-repo').value.trim(),
+    path:   document.getElementById('gh-path').value.trim(),
+    branch: document.getElementById('gh-branch').value.trim() || 'main',
+    token:  document.getElementById('gh-token').value.trim(),
+  };
+}
+
+async function loadFromGithub() {
+  const p = ghParams();
+  if (!p.owner || !p.repo || !p.path) {
+    showStatus('❌ Заполни: владелец, репозиторий и путь к файлу', true); return;
+  }
+  showStatus('⏳ Загружаю файл с GitHub...', false);
+  try {
+    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}?ref=${p.branch}`;
+    const headers = { 'Accept': 'application/vnd.github+json' };
+    if (p.token) headers['Authorization'] = 'Bearer ' + p.token;
+    const res = await fetch(url, { headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    ghFileSha = data.sha;
+    // GitHub returns base64-encoded content
+    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+    originalContent = decoded;
+    parseValues();
+    // Update dropzone UI
+    const dz = document.getElementById('dropzone');
+    dz.classList.add('file-loaded');
+    document.getElementById('dz-text').innerHTML =
+      `✅ Загружен с GitHub: <b>${p.owner}/${p.repo}/${p.path}</b><br><small style="font-size:11px;opacity:0.7">ветка: ${p.branch}</small>`;
+    showStatus(`✅ Файл загружен с GitHub! Значения распознаны — редактируй и сохраняй обратно.`, false);
+  } catch(err) {
+    showStatus('❌ Ошибка GitHub: ' + err.message, true);
+  }
+}
+
+async function saveToGithub() {
+  if (!originalContent) {
+    showStatus('❌ Сначала загрузи файл!', true); return;
+  }
+  const p = ghParams();
+  if (!p.owner || !p.repo || !p.path) {
+    showStatus('❌ Заполни: владелец, репозиторий и путь к файлу', true); return;
+  }
+  if (!p.token) {
+    showStatus('❌ Для сохранения на GitHub нужен Personal Access Token!', true); return;
+  }
+
+  // Build modified content same way as generateFile()
+  const modded = buildModifiedContent();
+  if (!modded) return;
+
+  showStatus('⏳ Сохраняю на GitHub...', false);
+  try {
+    // encode to base64 (UTF-8 safe)
+    const b64 = btoa(unescape(encodeURIComponent(modded)));
+    const now = new Date().toLocaleString('ru-RU');
+    const body = {
+      message: `⚙️ Конфигуратор: обновление цен (${now})`,
+      content: b64,
+      branch: p.branch,
+    };
+    if (ghFileSha) body.sha = ghFileSha;
+
+    const url = `https://api.github.com/repos/${p.owner}/${p.repo}/contents/${p.path}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + p.token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const result = await res.json();
+    // Update sha for next save
+    ghFileSha = result.content && result.content.sha ? result.content.sha : ghFileSha;
+    showStatus(`✅ Файл сохранён на GitHub! Коммит: ${result.commit && result.commit.sha ? result.commit.sha.slice(0,7) : 'ok'}`, false);
+  } catch(err) {
+    showStatus('❌ Ошибка сохранения: ' + err.message, true);
+  }
+}
+
+function buildModifiedContent() {
+  // Same logic as generateFile() but returns content instead of downloading
+  let content = originalContent;
+  let changeCount = 0;
+
+  const replaceFirst = (haystack, needle, replacement) => {
+    const idx = haystack.indexOf(needle);
+    if (idx === -1) return haystack;
+    return haystack.slice(0, idx) + replacement + haystack.slice(idx + needle.length);
+  };
+
+  const cpMatch = content.match(/CHEST_PRICES\s*=\s*\{[^}]+\}/);
+  if (cpMatch) {
+    const keys = ['common','rare','epic','epic_chest','legend','storm','medium_storm','ultra_storm'];
+    const idMap = {common:'chest_common',rare:'chest_rare',epic:'chest_epic',epic_chest:'chest_epic_chest',legend:'chest_legend',storm:'chest_storm',medium_storm:'chest_med_storm',ultra_storm:'chest_ultra'};
+    const parts = keys.map(k => {
+      const cfg_id = idMap[k];
+      const v = values[cfg_id];
+      const val = (v && v.current !== null && v.current !== undefined) ? Math.round(v.current) : extractOriginalChestVal(k);
+      if (v && v.current !== v.original) changeCount++;
+      return `${k}:${val}`;
+    });
+    const commentMatch = cpMatch[0].match(/\}(.*)/);
+    const comment = commentMatch ? commentMatch[1] : '';
+    const newObj = `CHEST_PRICES = {${parts.join(',')}}`;
+    content = content.replace(cpMatch[0], newObj + comment);
+  }
+
+  const constMap = [
+    {id:'cashback_rate',  search:'CASHBACK_RATE    = ', float:true},
+    {id:'cashback_min',   search:'CASHBACK_MIN     = '},
+    {id:'cashback_max',   search:'CASHBACK_MAX     = '},
+    {id:'roulette_spin',  search:'ROULETTE_SPIN_COST = '},
+    {id:'neon_spin',      search:'NEON_SPIN_COST = '},
+    {id:'sub_dm',         search:'DM_COST = ', comment:true},
+    {id:'sub_fd',         search:'FD_COST = ', comment:true},
+    {id:'shop_gold_gems', search:'GOLD_RATE_GEMS  = '},
+    {id:'shop_gold_stars',search:'GOLD_RATE_STARS = '},
+    {id:'shop_prgram_gems',search:'PRGRAM_RATE_GEMS = '},
+    {id:'shop_prgram_out', search:'PRGRAM_RATE_OUT  = '},
+  ];
+  for (const cm of constMap) {
+    const v = values[cm.id];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const re = new RegExp('(' + cm.search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(\\d+(?:\\.\\d+)?)(;?)');
+    if (content.match(re)) {
+      const newVal = cm.float ? v.current : Math.round(v.current);
+      content = content.replace(re, '$1' + newVal + '$3');
+      changeCount++;
+    }
+  }
+
+  const vipV = values['sub_vip'];
+  if (vipV && vipV.current !== null && vipV.current !== vipV.original) {
+    content = content.replace(/const VIP_COST = \d+/g, `const VIP_COST = ${Math.round(vipV.current)}`);
+    changeCount++;
+  }
+  const cbV = values['shop_click_base_cost'];
+  if (cbV && cbV.current !== null && cbV.current !== cbV.original) {
+    content = content.replace(/Math\.round\(\d+ \* Math\.pow/, `Math.round(${Math.round(cbV.current)} * Math.pow`);
+    changeCount++;
+  }
+  const pctSmall = values['shop_pct_small'];
+  if (pctSmall && pctSmall.current !== null && pctSmall.current !== pctSmall.original) {
+    content = content.replace(/PCT_SMALL_COST = \d+/, `PCT_SMALL_COST = ${Math.round(pctSmall.current)}`);
+    changeCount++;
+  }
+  const pctBig = values['shop_pct_big'];
+  if (pctBig && pctBig.current !== null && pctBig.current !== pctBig.original) {
+    content = content.replace(/PCT_BIG_COST   = \d+/, `PCT_BIG_COST   = ${Math.round(pctBig.current)}`);
+    changeCount++;
+  }
+
+  const formatNumSp = (n) => n >= 1000 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : n.toString();
+  const visualChestIds = ['chest_common','chest_rare','chest_epic','chest_epic_chest','chest_legend'];
+  const visualPriceMatches = [...content.matchAll(/<div class="chest-card-price">([\d\s\u00a0]+)\s*💎<\/div>/g)];
+  for (let i = 0; i < visualChestIds.length && i < visualPriceMatches.length; i++) {
+    const vid = visualChestIds[i];
+    const v = values[vid];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const newVal = Math.round(v.current);
+    const oldText = visualPriceMatches[i][1].trim();
+    const newText = formatNumSp(newVal);
+    const escapedOld = oldText.replace(/[\u00a0]/g, '\\s').replace(/ /g, '\\s');
+    const re = new RegExp(`(<div class="chest-card-price">)${escapedOld}\\s*💎(<\\/div>)`);
+    content = content.replace(re, `$1${newText} 💎$2`);
+  }
+
+  const bonusMap = [
+    {id:'bonus_xp500',  bonusId:'xp500'},
+    {id:'bonus_xp2',    bonusId:'xp2'},
+    {id:'bonus_xp15',   bonusId:'xp15'},
+    {id:'bonus_xp3_10', bonusId:'xp3_10'},
+    {id:'bonus_energy', bonusId:'energy_refill'},
+  ];
+  for (const bm of bonusMap) {
+    const v = values[bm.id];
+    if (!v || v.current === null || v.current === v.original) continue;
+    const newVal = Math.round(v.current);
+    const re1 = new RegExp(`buyBonus\\('${bm.bonusId}',(\\d+)\\)`, 'g');
+    content = content.replace(re1, `buyBonus('${bm.bonusId}',${newVal})`);
+    const re2 = new RegExp(`(id:'${bm.bonusId}'[^}]+cost:')\\d+( '\\s*\\+\\s*diaIcon)`, 'g');
+    content = content.replace(re2, `$1${newVal}$2`);
+    changeCount++;
+  }
+
+  const vipRaw = values['shop_vip_cost_raw'];
+  if (vipRaw && vipRaw.current !== null && vipRaw.current !== vipRaw.original) {
+    const re = new RegExp(`xp >= 269750 \\? 'green' : 'gray'`,'g');
+    content = content.replace(re, `xp >= ${Math.round(vipRaw.current)} ? 'green' : 'gray'`);
+    content = content.replace(/openModal\('vip'\)[^`]+269750/g, m => m.replace('269750', Math.round(vipRaw.current)));
+    changeCount++;
+  }
+
+  if (changeCount === 0) {
+    showStatus('ℹ️ Нет изменений — нечего сохранять.', false); return null;
+  }
+  return content;
+}
+
+function toggleGhPanel(el) {
+  el.classList.toggle('collapsed');
+  document.getElementById('gh-body').classList.toggle('hidden');
+}
+
+// Save gh fields to localStorage for convenience
+['gh-owner','gh-repo','gh-path','gh-branch'].forEach(id => {
+  const el = document.getElementById(id);
+  const saved = localStorage.getItem('cfg_'+id);
+  if (saved) el.value = saved;
+  el.addEventListener('input', () => localStorage.setItem('cfg_'+id, el.value));
+});
+
+// Initial render with empty placeholders
+renderAllInputs();
+</script>
+</body>
+</html>
